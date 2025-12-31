@@ -188,7 +188,8 @@ function callGemini(text, apiKey, modelName, customPrompt) {
     var url = "https://generativelanguage.googleapis.com/v1beta/models/" + modelId + ":generateContent?key=" + apiKey;
     
     // Use custom prompt if provided, otherwise default fallback (though client sends default)
-    var promptCheck = customPrompt || "あなたはプロの編集者です。以下のテキストはスピーカーノートのメモです。これを「必ず」書き直してください。元の意味を維持しつつ、より説得力のある、自然な日本語の話し言葉（スピーチ原稿）に変換してください。短すぎる場合も、前後の文脈を想像して自然な文章に膨らませてください。";
+    // Use custom prompt if provided, otherwise default fallback (though client sends default)
+    var promptCheck = customPrompt || "以下はスライドのスピーカーノート（音声入力含む）です。これを自然な「話し言葉」として読み上げられるように整形してください。\n【制約事項】\n・出力は「整形後の文章のみ」にしてください。「はい、整形しました」等の返答は禁止です。\n・無理に文章を長くせず、入力された内容を整理・補正することに集中してください。\n・音声認識による誤変換と思われる箇所は、文脈から正しい言葉に修正してください。\n\n[元のテキスト]: ";
     
     var content = promptCheck + "\n\n[元のテキスト]: " + text;
     
