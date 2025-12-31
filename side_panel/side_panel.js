@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const polishCheckbox = document.getElementById('polishCheckbox');
     const promptInput = document.getElementById('promptInput');
     const resetPromptBtn = document.getElementById('resetPromptBtn');
+    const transparencyRange = document.getElementById('transparencyRange');
+    const transparencyValue = document.getElementById('transparencyValue');
 
     // Default Prompt (Japanese Polishing)
     const DEFAULT_PROMPT = "あなたはプロの編集者です。以下のテキストはスピーカーノートのメモです。これを「必ず」書き直してください。元の意味を維持しつつ、より説得力のある、自然な日本語の話し言葉（スピーチ原稿）に変換してください。短すぎる場合も、前後の文脈を想像して自然な文章に膨らませてください。\n\n[元のテキスト]: ";
@@ -28,19 +30,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Settings Logic ---
     // Load saved settings
-    chrome.storage.local.get(['gasUrl', 'geminiModel', 'availableModels', 'customPrompt'], (result) => {
+    chrome.storage.local.get(['gasUrl', 'geminiModel', 'availableModels', 'customPrompt', 'overlayTransparency'], (result) => {
         if (result.gasUrl) gasUrlInput.value = result.gasUrl;
 
-        // Restore available models if cached
+        // Restore available models
         if (result.availableModels && Array.isArray(result.availableModels)) {
             populateModelSelect(result.availableModels, result.geminiModel);
         } else if (result.geminiModel) {
-            // If only model name saved but no list, ensure it's selected (custom add)
             addOption(modelSelect, result.geminiModel, result.geminiModel, true);
         }
 
-        // Restore prompt or set default
+        // Restore prompt
         promptInput.value = result.customPrompt || DEFAULT_PROMPT;
+
+        // Restore Transparency (Default 70)
+        const savedTransparency = result.overlayTransparency !== undefined ? result.overlayTransparency : 70;
+        transparencyRange.value = savedTransparency;
+        transparencyValue.textContent = savedTransparency;
+    });
+
+    // Update value display on slide
+    transparencyRange.addEventListener('input', (e) => {
+        transparencyValue.textContent = e.target.value;
     });
 
     function addOption(select, text, value, isSelected) {
@@ -88,7 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
         chrome.storage.local.set({
             gasUrl: gasUrlInput.value.trim(),
             geminiModel: modelSelect.value,
-            customPrompt: promptInput.value // Save raw input (even if empty/changed)
+            customPrompt: promptInput.value,
+            overlayTransparency: parseInt(transparencyRange.value, 10)
         }, () => {
             settingsModal.close();
         });
@@ -283,6 +295,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Use prompt from Input, or fallback to default if somehow empty (though we fill it on load)
         const customPrompt = promptInput.value || DEFAULT_PROMPT;
 
+        // Get transparency (fallback 70)
+        const transparency = parseInt(transparencyRange.value, 10) || 70;
+
         statusMessage.textContent = "🚀 書き出し中 (GASへ送信)...";
         exportBtn.disabled = true;
 
@@ -296,7 +311,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 useGemini: useGemini,
                 overlayNotes: overlayNotes,
                 geminiModel: selectedModel,
-                customPrompt: customPrompt
+                customPrompt: customPrompt,
+                transparency: transparency // Send transparency value
             };
 
             const response = await fetch(gasUrl, {

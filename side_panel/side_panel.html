@@ -37,6 +37,11 @@
           <button id="refreshModelsBtn" class="secondary-btn" title="GASからモデル一覧を更新">🔄</button>
         </div>
 
+        <div style="margin-top:12px;">
+          <label>テキストボックスの透明度: <span id="transparencyValue">70</span>%</label>
+          <input type="range" id="transparencyRange" min="0" max="100" value="70" class="url-input" style="padding:0;">
+        </div>
+
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
           <label style="margin:0;">カスタムプロンプト (任意)</label>
           <button id="resetPromptBtn" class="secondary-btn" style="width:auto; font-size:0.8em; padding:2px 8px;"
