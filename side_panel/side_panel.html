@@ -72,10 +72,14 @@
     </main>
 
     <footer>
-      <div class="export-options">
+      <div class="export-options" style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
         <label style="display:flex; align-items:center; cursor:pointer;">
           <input type="checkbox" id="polishCheckbox" checked>
           <span style="font-size:0.9em; margin-left:6px;">✨ Geminiで文章を整形</span>
+        </label>
+        <label style="display:flex; align-items:center; cursor:pointer;">
+          <input type="checkbox" id="overlayNotesCheckbox">
+          <span style="font-size:0.9em; margin-left:6px;">📝 スライド内にテキストを表示</span>
         </label>
       </div>
       <button id="exportBtn" class="export-btn">🚀 スライドへ書き出し</button>

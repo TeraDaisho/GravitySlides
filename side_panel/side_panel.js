@@ -275,6 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const useGemini = polishCheckbox.checked;
+        const overlayNotes = document.getElementById('overlayNotesCheckbox').checked;
 
         // Get model from select or storage
         let selectedModel = modelSelect.value || "gemini-1.5-flash-latest";
@@ -293,6 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     note: s.note
                 })),
                 useGemini: useGemini,
+                overlayNotes: overlayNotes,
                 geminiModel: selectedModel,
                 customPrompt: customPrompt
             };

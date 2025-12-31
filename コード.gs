@@ -29,6 +29,7 @@ function doPost(e) {
         var useGemini = params.useGemini || false;
         var geminiModel = params.geminiModel || "gemini-1.5-flash-latest";
         var customPrompt = params.customPrompt || ""; // Get custom prompt
+        var overlayNotes = params.overlayNotes || false; // Checkbox for overlay text
 
         var presentation = SlidesApp.create(title);
         var pUrl = presentation.getUrl();
@@ -99,6 +100,26 @@ function doPost(e) {
                 var notesPage = slide.getNotesPage();
                 var speakerNotesShape = notesPage.getSpeakerNotesShape();
                 speakerNotesShape.getText().setText(finalNote);
+
+                // 4. Overlay Notes on Slide (Request: White background text box over the image)
+                if (overlayNotes) {
+                    var pageWidth = presentation.getPageWidth();
+                    var pageHeight = presentation.getPageHeight();
+                    var margin = 30; // Margin from edges
+
+                    // Create text box covering the slide (z-order is automatically on top of image inserted earlier)
+                    var textBox = slide.insertShape(SlidesApp.ShapeType.TEXT_BOX, margin, margin, pageWidth - (margin * 2), pageHeight - (margin * 2));
+                    
+                    textBox.getText().setText(finalNote);
+                    
+                    // Styling
+                    textBox.getFill().setSolidFill('#FFFFFF'); // White background
+                    
+                    // Styling text
+                    var textStyle = textBox.getText().getTextStyle();
+                    textStyle.setForegroundColor('#000000');
+                    textStyle.setFontSize(18);
+                }
             }
         }
 
