@@ -84,7 +84,7 @@ function doPost(e) {
                         // Call Gemini with selected model and custom prompt
                         var result = callGemini(finalNote, geminiKey, geminiModel, customPrompt);
                         if (result.success) {
-                            finalNote = result.text + "\n\n(✨ AI Polished via " + geminiModel + ")";
+                            finalNote = result.text; // Credit removed as requested
                         } else {
                             finalNote += "\n\n[Gemini Skipped]: " + result.reason;
                             // Debug disabled per user request
@@ -107,13 +107,34 @@ function doPost(e) {
                     var pageHeight = presentation.getPageHeight();
                     var margin = 30; // Margin from edges
 
-                    // Create text box covering the slide (z-order is automatically on top of image inserted earlier)
-                    var textBox = slide.insertShape(SlidesApp.ShapeType.TEXT_BOX, margin, margin, pageWidth - (margin * 2), pageHeight - (margin * 2));
+                    // Create text box covering the LEFT HALF of the slide
+                    // Width is half of page width, minus margins on both sides (30 on left, 30 on right of the box)
+                    var halfWidth = (pageWidth / 2) - (margin * 2);
+                    
+                    var textBox = slide.insertShape(SlidesApp.ShapeType.TEXT_BOX, margin, margin, halfWidth, pageHeight - (margin * 2));
                     
                     textBox.getText().setText(finalNote);
                     
                     // Styling
-                    textBox.getFill().setSolidFill('#FFFFFF'); // White background
+                    // Transparency 70% -> Opacity 0.3? Or Opacity 0.7?
+                    // Assuming user implies "Opacity 70%" (Standard interpretation for readability) OR "Transparency 30%".
+                    // However, in GAS, setSolidFill(color, alpha) takes alpha (0.0 to 1.0).
+                    // If user literally meant "Transparency 70%", that is Alpha 0.3.
+                    // If user meant "Opacity 70%", that is Alpha 0.7.
+                    // Given it's a text box, 0.3 is very faint white. I'll use 0.7 (70% Opacity) as it's safer for text bg.
+                    // Update: User said "Transparency 70%" (Toumeido 70%). In many Japanese tools, "Toumeido 0%" is opaque.
+                    // So "Toumeido 70%" means "Alpha 0.3".
+                    // But 0.3 white bg might be too hard to read.
+                    // Let's compromise or stick to the literal "Transparency". 
+                    // Let's use 0.7 alpha (70% opaque) and if they complain it's too solid, we lower it.
+                    // Wait, usually "Transparency 70%" -> "Make it 70% transparent".
+                    // I'll try 0.3 alpha (30% opaque). If I am wrong, it's safer to be too transparent than too opaque? No, text requires contrast.
+                    // I will interpret "Transparency 70%" as "Alpha 0.3" but I suspect they want "Alpha 0.7".
+                    // Let's check typical CSS 'opacity: 0.7'.
+                    // I will go with 0.3 (30% opacity) because "Transparency 70%" is specific.
+                    // Actually, let's use 0.5 as a safe middle ground? No, follow instructions.
+                    // "Transparency 70%" = Alpha 0.3.
+                    textBox.getFill().setSolidFill('#FFFFFF', 0.3);
                     
                     // Styling text
                     var textStyle = textBox.getText().getTextStyle();
