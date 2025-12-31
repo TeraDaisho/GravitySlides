@@ -88,8 +88,4 @@ Gravity Slidesで作ったスライドを使えば、簡単に解説動画を作
 3.  **Google Vidsで動画に変換**:
     *   Googleスライド右側のサイドパネル（Geminiアイコンなど）にある **「動画に変換」** ボタンをクリックします。
     *   これだけで、**Google Vids** がスライドの内容とスピーカーノートを読み取り、AIナレーション付きの解説動画を全自動で生成してくれます。
-    *   生成された動画はGoogle Vids上で自由に編集・共有が可能です。これぞ近未来の動画作成フローです！
-
----
-Developed by [Your Name/Organization]
-GitHub: [https://github.com/TeraDaisho/GravitySlides](https://github.com/TeraDaisho/GravitySlides)
+    *   生成された動画はGoogle Vids上で自由に編集・共有が可能です。
