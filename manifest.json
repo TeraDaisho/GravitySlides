@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Gravity Slides - GAS Edition",
+  "version": "1.2",
+  "description": "Capture screens in 16:9 and export to Google Slides via GAS.",
+  "permissions": [
+    "sidePanel",
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://script.google.com/*",
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Open Gravity Slides"
+  },
+  "side_panel": {
+    "default_path": "side_panel/side_panel.html"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

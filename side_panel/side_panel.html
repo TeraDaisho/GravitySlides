@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="side_panel.css">
+  <title>Gravity Slides</title>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Gravity Slides</h1>
+      <div class="header-buttons">
+        <button id="resizeBtn" title="ウィンドウサイズを16:9に変更">⤢ 16:9</button>
+        <button id="settingsBtn" title="設定">⚙️</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Settings Modal -->
+      <dialog id="settingsModal">
+        <h2>設定</h2>
+
+        <label>GAS Webアプリ URL</label>
+        <input type="text" id="gasUrlInput" placeholder="https://script.google.com/..." class="url-input">
+
+        <div style="font-size:0.8em; color:#8b949e; margin-top:12px; margin-bottom: 12px;">
+          ※GeminiのAPIキーはGAS側の「スクリプトプロパティ」で管理してください。
+        </div>
+
+        <label>Gemini モデル</label>
+        <div style="display:flex; gap:8px;">
+          <select id="modelSelect" class="url-input" style="flex-grow:1;">
+            <option value="gemini-1.5-flash-latest">gemini-1.5-flash-latest (デフォルト)</option>
+          </select>
+          <button id="refreshModelsBtn" class="secondary-btn" title="GASからモデル一覧を更新">🔄</button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+          <label style="margin:0;">カスタムプロンプト (任意)</label>
+          <button id="resetPromptBtn" class="secondary-btn" style="width:auto; font-size:0.8em; padding:2px 8px;"
+            title="初期プロンプトに戻す">↺ 初期化</button>
+        </div>
+        <textarea id="promptInput" class="speaker-note-input" rows="4"
+          placeholder="Geminiへの指示を入力... (デフォルト: 日本語の話し言葉に整形)"></textarea>
+
+        <div class="modal-actions">
+          <button id="saveSettingsBtn" class="primary-btn">保存して閉じる</button>
+        </div>
+      </dialog>
+
+      <div class="controls">
+        <div class="control-group">
+          <label>音声入力 (スピーカーノート)</label>
+          <div style="display:flex; gap:8px;">
+            <button id="recordBtn" class="record-btn">🎤 音声入力を開始</button>
+            <span id="recordingStatus" class="recording-badge hidden">録音中...</span>
+          </div>
+          <textarea id="noteInput" class="speaker-note-input" rows="3" placeholder="ここに入力または音声入力..."></textarea>
+        </div>
+
+        <div class="control-group">
+          <button id="captureBtn" class="primary-btn">📸 スライドを撮影</button>
+        </div>
+      </div>
+
+      <div class="slides-container">
+        <h3>撮影したスライド (<span id="slideCount">0</span>)</h3>
+        <div id="slidesList"></div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="export-options">
+        <label style="display:flex; align-items:center; cursor:pointer;">
+          <input type="checkbox" id="polishCheckbox" checked>
+          <span style="font-size:0.9em; margin-left:6px;">✨ Geminiで文章を整形</span>
+        </label>
+      </div>
+      <button id="exportBtn" class="export-btn">🚀 スライドへ書き出し</button>
+      <div id="statusMessage" class="status"></div>
+    </footer>
+  </div>
+  <script src="side_panel.js"></script>
+</body>
+
+</html>
